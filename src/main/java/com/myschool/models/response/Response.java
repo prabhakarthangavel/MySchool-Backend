@@ -1,4 +1,4 @@
-package com.myschool.models;
+package com.myschool.models.response;
 
 public class Response {
 	private String status;
@@ -6,7 +6,11 @@ public class Response {
 	public Response(String status) {
 		this.status = status;
 	}
-
+	
+	public Response() {
+		
+	}
+	
 	public String getStatus() {
 		return status;
 	}
