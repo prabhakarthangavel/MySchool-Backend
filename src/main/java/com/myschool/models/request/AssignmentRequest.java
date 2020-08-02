@@ -7,7 +7,7 @@ public class AssignmentRequest {
 	private String section;
 	private String subject;
 	private String description;
-	private Date dueDate;
+	private String dueDate;
 	
 	public String getSubject() {
 		return subject;
@@ -33,10 +33,10 @@ public class AssignmentRequest {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Date getDueDate() {
+	public String getDueDate() {
 		return dueDate;
 	}
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 }

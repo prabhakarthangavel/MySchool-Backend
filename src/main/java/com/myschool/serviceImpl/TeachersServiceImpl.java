@@ -61,5 +61,4 @@ public class TeachersServiceImpl implements TeachersService {
 		assignmentRepo.save(entity);
 		return "Submited";
 	}
-
 }

@@ -19,51 +19,62 @@ public class Assignments implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private int id;
-	@Column(name="class")
+	@Column(name = "class")
 	private String clas;
 	@Column
 	private String section;
 	@Column
 	private String subject;
-	@Column
+	@Column(length = 3510)
 	private String description;
-	@Column
-	private Date dueDate;
-	
+	@Column(name="due_date")
+	private String dueDate;
+
 	public String getSubject() {
 		return subject;
 	}
+
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getClas() {
 		return clas;
 	}
+
 	public void setClas(String clas) {
 		this.clas = clas;
 	}
+
 	public String getSection() {
 		return section;
 	}
+
 	public void setSection(String section) {
 		this.section = section;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Date getDueDate() {
+
+	public String getDueDate() {
 		return dueDate;
 	}
-	public void setDueDate(Date dueDate) {
+
+	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
 }
