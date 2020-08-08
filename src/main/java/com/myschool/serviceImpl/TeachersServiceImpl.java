@@ -1,6 +1,10 @@
 package com.myschool.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +12,24 @@ import org.springframework.stereotype.Service;
 
 import com.myschool.entity.Assignments;
 import com.myschool.entity.AttendanceList;
+import com.myschool.entity.HolidayTable;
+import com.myschool.entity.MessagesTable;
+import com.myschool.entity.PerformanceTable;
+import com.myschool.entity.StudentsTable;
 import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.request.AttendanceRequest;
+import com.myschool.models.request.HolidayListRequest;
+import com.myschool.models.request.MessagesRequest;
+import com.myschool.models.request.PerformanceRequest;
+import com.myschool.models.response.StudentsList;
 import com.myschool.repository.AssignmentsRepo;
 import com.myschool.repository.AttendanceRepo;
+import com.myschool.repository.HolidayRepo;
+import com.myschool.repository.MessagesRepo;
+import com.myschool.repository.PerformanceRepo;
+import com.myschool.repository.StudentsRepo;
 import com.myschool.service.TeachersService;
+import com.myschool.utils.ResponseConstants;
 
 @Service
 public class TeachersServiceImpl implements TeachersService {
@@ -22,6 +39,18 @@ public class TeachersServiceImpl implements TeachersService {
 	
 	@Autowired
 	private AssignmentsRepo assignmentRepo;
+	
+	@Autowired
+	private MessagesRepo messageRepo;
+	
+	@Autowired
+	private StudentsRepo studentsRepo;
+	
+	@Autowired
+	private PerformanceRepo performanceRepo;
+	
+	@Autowired
+	private HolidayRepo holidayRepo;
 
 	@Override
 	public String saveAttendance(AttendanceRequest request) {
@@ -51,14 +80,107 @@ public class TeachersServiceImpl implements TeachersService {
 		attend.setYear(request.getYear());
 		attend.setPercentage(request.getPresent()*100/request.getWorking_days());
 		attenListRepo.save(attend);
-		return "Saved";
+		return ResponseConstants.saved;
 	}
 
 	@Override
 	public String saveAssginments(AssignmentRequest request) {
-		Assignments entity = new Assignments();
-		BeanUtils.copyProperties(request, entity);
-		assignmentRepo.save(entity);
-		return "Submited";
+		String response = null;
+		Assignments entity = assignmentRepo.findItem(request.getClas(), request.getDescription(),
+				request.getDueDate(), request.getSection(), request.getSubject());
+		if(entity != null) {
+			response = "Duplicate Assignment Request!";
+		}else {
+			Assignments entity1 = new Assignments();
+			BeanUtils.copyProperties(request, entity1);
+			assignmentRepo.save(entity1);
+			response = ResponseConstants.submited;
+		}
+		return response;
+	}
+
+	@Override
+	public String saveMessages(MessagesRequest request) {
+		String response = null;
+		List<MessagesTable> entity = null;
+		if(request.getClas() != 0) {
+			entity = messageRepo.findByClass(request.getClas());
+			response = message(entity,request);
+		}else if(request.getStudentId() != 0) {
+			entity = messageRepo.findByStudent(request.getStudentId());
+			response = message(entity,request);
+		}
+		return response;
+	}
+	
+	public String message(List<MessagesTable> entity, MessagesRequest request) {
+		String response = null;
+		if(!entity.isEmpty()) {
+			boolean message = entity.stream().map(ls -> ls.getMessage()).filter(tm -> tm.equals(request.getMessage())).findFirst().isPresent();
+			if(message) {
+				response = "Duplicate Message!";
+			}else {
+				MessagesTable entitys = new MessagesTable();
+				entitys.setClas(request.getClas());
+				entitys.setStudent_id(request.getStudentId());
+				entitys.setMessage(request.getMessage());
+				messageRepo.save(entitys);
+				response = ResponseConstants.messages;
+			}
+		}else {
+			MessagesTable entitys = new MessagesTable();
+			entitys.setClas(request.getClas());
+			entitys.setStudent_id(request.getStudentId());
+			entitys.setMessage(request.getMessage());
+			messageRepo.save(entitys);
+			response = ResponseConstants.messages;
+		}
+		return response;
+	}
+
+	@Override
+	public List<StudentsList> getStudentList(int studentId) {
+		List<StudentsList> response = new ArrayList<StudentsList>();
+		List<StudentsTable> studentList = studentsRepo.findByStudentsID(studentId);
+		for(StudentsTable source:studentList) {
+			StudentsList target = new StudentsList();
+			BeanUtils.copyProperties(source, target);
+			response.add(target);
+		}
+		return response;
+	}
+
+	@Override
+	public String setPerformance(PerformanceRequest request) {
+		String response = null;
+		PerformanceTable table = performanceRepo.findPerformances(request.getStudent_id(), request.getYear(), request.getExam());
+		if(table == null) {
+			PerformanceTable entity = new PerformanceTable();
+			BeanUtils.copyProperties(request, entity);
+			performanceRepo.save(entity);
+			response = ResponseConstants.saved;
+		}else {
+			response = ResponseConstants.alreadyExist;
+		}	
+		return response;
+	}
+
+	@Transactional
+	@Override
+	public String SetHoliday(HolidayListRequest request) {
+		List<String> event = request.getEvent();
+		List<Date> date = request.getHoliday();
+		for(int i=0;i<event.size();i++) {
+			HolidayTable table = holidayRepo.findDate(date.get(i));
+			if(table != null) {
+				holidayRepo.updateEvent(event.get(i),date.get(i));
+			}else {
+				HolidayTable entity = new HolidayTable();
+				entity.setHoliday(date.get(i));
+				entity.setEvent(event.get(i));
+				holidayRepo.save(entity);
+			}
+		}
+		return ResponseConstants.saved;
 	}
 }

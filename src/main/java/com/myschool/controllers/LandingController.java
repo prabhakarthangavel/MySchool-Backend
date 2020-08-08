@@ -21,8 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.myschool.entity.ClassTable;
 import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.request.AttendanceRequest;
+import com.myschool.models.request.HolidayListRequest;
+import com.myschool.models.request.MessagesRequest;
+import com.myschool.models.request.PerformanceRequest;
 import com.myschool.models.response.ClassList;
 import com.myschool.models.response.Response;
+import com.myschool.models.response.StudentsList;
 import com.myschool.repository.ClassesRepo;
 import com.myschool.serviceImpl.TeachersServiceImpl;
 
@@ -41,12 +45,12 @@ public class LandingController {
 	}
 
 	@PostMapping("/setAssignments")
-	public ResponseEntity<Response> setTimetable(@RequestBody AssignmentRequest request) throws ParseException {	    
+	public ResponseEntity<Response> setTimetable(@RequestBody AssignmentRequest request) throws ParseException {
 		return ResponseEntity.ok(new Response(componentService.saveAssginments(request)));
 	}
-	
+
 	@GetMapping("/getClasses")
-	public ResponseEntity<List<Integer>> getSection(){
+	public ResponseEntity<List<Integer>> getSection() {
 		return ResponseEntity.ok(classRepo.findClasses());
 	}
 
@@ -56,5 +60,26 @@ public class LandingController {
 		List<String> section = Arrays.asList(entity.getSection().split(","));
 		List<String> subjects = Arrays.asList(entity.getSubjects().split(","));
 		return ResponseEntity.ok(new ClassList(section, subjects));
+	}
+
+	@PostMapping("/setMessages")
+	public ResponseEntity<Response> setMessages(@RequestBody MessagesRequest request) {
+		return ResponseEntity.ok(new Response(componentService.saveMessages(request)));
+	}
+
+	@GetMapping("/getStudents/{studentID}")
+	public ResponseEntity<List<StudentsList>> getStudents(@PathVariable int studentID) {
+		List<StudentsList> list = componentService.getStudentList(studentID);
+		return ResponseEntity.ok(list);
+	}
+
+	@PostMapping("/setPerformance")
+	public ResponseEntity<Response> setPerformance(@RequestBody PerformanceRequest request) {
+		return ResponseEntity.ok(new Response(componentService.setPerformance(request)));
+	}
+
+	@PostMapping("/setHoliday")
+	public ResponseEntity<Response> setHoliday(@RequestBody HolidayListRequest request) {
+		return ResponseEntity.ok(new Response(componentService.SetHoliday(request)));
 	}
 }
