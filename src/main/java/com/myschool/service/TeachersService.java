@@ -7,6 +7,7 @@ import com.myschool.models.request.AttendanceRequest;
 import com.myschool.models.request.HolidayListRequest;
 import com.myschool.models.request.MessagesRequest;
 import com.myschool.models.request.PerformanceRequest;
+import com.myschool.models.request.UserRequest;
 import com.myschool.models.response.StudentsList;
 
 public interface TeachersService {
@@ -16,4 +17,5 @@ public interface TeachersService {
 	public List<StudentsList> getStudentList(int studentId);
 	public String setPerformance(PerformanceRequest request);
 	public String SetHoliday(HolidayListRequest request);
+	public String saveUser(UserRequest request);
 }

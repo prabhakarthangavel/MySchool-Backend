@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +18,13 @@ import com.myschool.entity.HolidayTable;
 import com.myschool.entity.MessagesTable;
 import com.myschool.entity.PerformanceTable;
 import com.myschool.entity.StudentsTable;
+import com.myschool.entity.UsersTable;
 import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.request.AttendanceRequest;
 import com.myschool.models.request.HolidayListRequest;
 import com.myschool.models.request.MessagesRequest;
 import com.myschool.models.request.PerformanceRequest;
+import com.myschool.models.request.UserRequest;
 import com.myschool.models.response.StudentsList;
 import com.myschool.repository.AssignmentsRepo;
 import com.myschool.repository.AttendanceRepo;
@@ -28,6 +32,7 @@ import com.myschool.repository.HolidayRepo;
 import com.myschool.repository.MessagesRepo;
 import com.myschool.repository.PerformanceRepo;
 import com.myschool.repository.StudentsRepo;
+import com.myschool.repository.UsersRepo;
 import com.myschool.service.TeachersService;
 import com.myschool.utils.ResponseConstants;
 
@@ -51,6 +56,9 @@ public class TeachersServiceImpl implements TeachersService {
 	
 	@Autowired
 	private HolidayRepo holidayRepo;
+	
+	@Autowired
+	private UsersRepo usersRepo;
 
 	@Override
 	public String saveAttendance(AttendanceRequest request) {
@@ -182,5 +190,22 @@ public class TeachersServiceImpl implements TeachersService {
 			}
 		}
 		return ResponseConstants.saved;
+	}
+	
+	@Transactional
+	@Override
+	public String saveUser(UserRequest user) {
+		String response = null;
+		ModelMapper mapper = new ModelMapper();
+		java.lang.reflect.Type source = new TypeToken<UsersTable>() {
+		}.getType();
+		UsersTable userEntity = mapper.map(user, source);
+		if(usersRepo.findusername(user.getUsername()) != null) {
+			response = "Username already exist try different name!";
+		}else {
+			usersRepo.save(userEntity);
+			response = ResponseConstants.saved;
+		}
+		return response;
 	}
 }
