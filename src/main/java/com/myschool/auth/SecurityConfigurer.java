@@ -11,21 +11,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
-
+	
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 
-//	@Autowired
-//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//	}
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+	}
 	
 	@Autowired
 	private JwtRequestFilter requestFilter;
@@ -46,13 +45,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().cors().and()
 
 				.authorizeRequests()
+				.antMatchers("/teacher/**").hasRole("TEACHER").antMatchers("/student/**").hasRole("STUDENT")
 				.antMatchers("/authenticate").permitAll()
-				.antMatchers("/auth/user").hasRole("USER").antMatchers("/auth/admin").hasRole("ADMIN")
-				.anyRequest().authenticated()
-//		.antMatchers("/getAllProducts/**").permitAll()
-				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//		.logout().logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
-//				.httpBasic()
+				.anyRequest().authenticated().and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 }

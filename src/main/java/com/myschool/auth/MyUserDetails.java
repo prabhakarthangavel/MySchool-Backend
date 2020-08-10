@@ -16,6 +16,8 @@ public class MyUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		System.out.println(user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
+				.collect(Collectors.toList()));
 		return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
 				.collect(Collectors.toList());
 
@@ -59,7 +61,6 @@ public class MyUserDetails implements UserDetails {
 	}
 
 	public void setUser(UsersTable user) {
-		System.out.println("USER"+user);
 		this.user = user;
 	}
 }

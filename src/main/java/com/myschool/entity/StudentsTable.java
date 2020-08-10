@@ -20,9 +20,11 @@ public class StudentsTable implements Serializable {
 	private int id;
 	@Column
 	private int student_id;
-	@Column
-	private String name;
-	@Column(name="class",length=50)
+	@Column(length=30)
+	private String first_name;
+	@Column(length=30)
+	private String last_name;
+	@Column(name="class")
 	private int clas;
 	@Column
 	private String section;
@@ -38,11 +40,17 @@ public class StudentsTable implements Serializable {
 	public void setStudent_id(int student_id) {
 		this.student_id = student_id;
 	}
-	public String getName() {
-		return name;
+	public String getFirst_name() {
+		return first_name;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setFirst_name(String first_name) {
+		this.first_name = first_name;
+	}
+	public String getLast_name() {
+		return last_name;
+	}
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
 	}
 	public int getClas() {
 		return clas;
