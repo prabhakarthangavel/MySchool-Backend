@@ -14,8 +14,10 @@ public interface TeachersService {
 	public String saveAttendance(AttendanceRequest request);
 	public String saveAssginments(AssignmentRequest request);
 	public String saveMessages(MessagesRequest request);
-	public List<StudentsList> getStudentList(int studentId);
+	public List<StudentsList> getStudentList(String studentId);
 	public String setPerformance(PerformanceRequest request);
 	public String SetHoliday(HolidayListRequest request);
 	public String saveUser(UserRequest request);
+	public String getRole(String id);
+	public String getfistName(String id);
 }

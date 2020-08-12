@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.myschool.serviceImpl.TeachersServiceImpl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,6 +22,9 @@ public class JwtUtil {
 	public static final long JWT_TOKEN_VALIDITY = 15 * 60 * 60;
 	@Value("${jwt.secret}")
 	private String secret;
+
+	@Autowired
+	private TeachersServiceImpl serviceImpl;
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -44,12 +50,15 @@ public class JwtUtil {
 
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
+		claims.put("role", serviceImpl.getRole(userDetails.getUsername()));
+		claims.put("name",serviceImpl.getfistName(userDetails.getUsername()));
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				//.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+				// .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY *
+				// 1000))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 

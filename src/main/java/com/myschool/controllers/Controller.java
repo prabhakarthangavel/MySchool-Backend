@@ -24,10 +24,10 @@ import com.myschool.serviceImpl.TeachersServiceImpl;
 public class Controller {
 	@Autowired
 	private AuthenticationManager authManager;
-	
+
 	@Autowired
 	private MyUserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private JwtUtil jwtUtil;
 
@@ -45,10 +45,10 @@ public class Controller {
 	@PostMapping("/authenticate")
 	public ResponseEntity<AuthenticateResponse> auth(@RequestBody AuthenticationRequest request) throws Exception {
 		try {
-			authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
-					request.getPassword()));
-		}catch(BadCredentialsException e) {
-			throw new Exception("Incorrect username or password!",e);
+			authManager.authenticate(
+					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+		} catch (BadCredentialsException e) {
+			throw new Exception("Incorrect username or password!", e);
 		}
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
 		final String jwt = jwtUtil.generateToken(userDetails);
@@ -61,7 +61,7 @@ public class Controller {
 		user.setPassword(encryptPwd);
 		return ResponseEntity.ok(new Response(componentService.saveUser(user)));
 	}
-	
+
 	@GetMapping("/auth/admin")
 	public String admin() {
 		return "admin works";

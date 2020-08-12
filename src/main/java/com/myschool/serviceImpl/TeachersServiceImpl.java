@@ -2,7 +2,9 @@ package com.myschool.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -17,6 +19,7 @@ import com.myschool.entity.AttendanceList;
 import com.myschool.entity.HolidayTable;
 import com.myschool.entity.MessagesTable;
 import com.myschool.entity.PerformanceTable;
+import com.myschool.entity.RolesTable;
 import com.myschool.entity.StudentsTable;
 import com.myschool.entity.UsersTable;
 import com.myschool.models.request.AssignmentRequest;
@@ -41,22 +44,22 @@ public class TeachersServiceImpl implements TeachersService {
 
 	@Autowired
 	private AttendanceRepo attenListRepo;
-	
+
 	@Autowired
 	private AssignmentsRepo assignmentRepo;
-	
+
 	@Autowired
 	private MessagesRepo messageRepo;
-	
+
 	@Autowired
 	private StudentsRepo studentsRepo;
-	
+
 	@Autowired
 	private PerformanceRepo performanceRepo;
-	
+
 	@Autowired
 	private HolidayRepo holidayRepo;
-	
+
 	@Autowired
 	private UsersRepo usersRepo;
 
@@ -65,19 +68,21 @@ public class TeachersServiceImpl implements TeachersService {
 		List<AttendanceList> entity = attenListRepo.findStudentId(request.getStudent_id());
 		String response = null;
 		if (!entity.isEmpty()) {
-			boolean month = entity.stream().map(ls -> ls.getMonth()).filter(tm -> tm.equals(request.getMonth())).findFirst().isPresent();
-			boolean year = entity.stream().map(ls -> ls.getYear()).filter(tm -> tm == request.getYear()).findFirst().isPresent();
+			boolean month = entity.stream().map(ls -> ls.getMonth()).filter(tm -> tm.equals(request.getMonth()))
+					.findFirst().isPresent();
+			boolean year = entity.stream().map(ls -> ls.getYear()).filter(tm -> tm == request.getYear()).findFirst()
+					.isPresent();
 			if (month && year) {
 				response = "Student ID and Year already exist";
 			} else if ((month && !year) || (!month && year)) {
 				response = save(request);
-			} 
+			}
 		} else {
 			response = save(request);
 		}
 		return response;
 	}
-	
+
 	private String save(AttendanceRequest request) {
 		AttendanceList attend = new AttendanceList();
 		attend.setAbsent(request.getWorking_days() - request.getPresent());
@@ -86,7 +91,7 @@ public class TeachersServiceImpl implements TeachersService {
 		attend.setWorking_days(request.getWorking_days());
 		attend.setStudent_id(request.getStudent_id());
 		attend.setYear(request.getYear());
-		attend.setPercentage(request.getPresent()*100/request.getWorking_days());
+		attend.setPercentage(request.getPresent() * 100 / request.getWorking_days());
 		attenListRepo.save(attend);
 		return ResponseConstants.saved;
 	}
@@ -94,11 +99,11 @@ public class TeachersServiceImpl implements TeachersService {
 	@Override
 	public String saveAssginments(AssignmentRequest request) {
 		String response = null;
-		Assignments entity = assignmentRepo.findItem(request.getClas(), request.getDescription(),
-				request.getDueDate(), request.getSection(), request.getSubject());
-		if(entity != null) {
+		Assignments entity = assignmentRepo.findItem(request.getClas(), request.getDescription(), request.getDueDate(),
+				request.getSection(), request.getSubject());
+		if (entity != null) {
 			response = "Duplicate Assignment Request!";
-		}else {
+		} else {
 			Assignments entity1 = new Assignments();
 			BeanUtils.copyProperties(request, entity1);
 			assignmentRepo.save(entity1);
@@ -111,23 +116,24 @@ public class TeachersServiceImpl implements TeachersService {
 	public String saveMessages(MessagesRequest request) {
 		String response = null;
 		List<MessagesTable> entity = null;
-		if(request.getClas() != 0) {
+		if (request.getClas() != 0) {
 			entity = messageRepo.findByClass(request.getClas());
-			response = message(entity,request);
-		}else if(request.getStudentId() != 0) {
+			response = message(entity, request);
+		} else if (request.getStudentId() != 0) {
 			entity = messageRepo.findByStudent(request.getStudentId());
-			response = message(entity,request);
+			response = message(entity, request);
 		}
 		return response;
 	}
-	
+
 	public String message(List<MessagesTable> entity, MessagesRequest request) {
 		String response = null;
-		if(!entity.isEmpty()) {
-			boolean message = entity.stream().map(ls -> ls.getMessage()).filter(tm -> tm.equals(request.getMessage())).findFirst().isPresent();
-			if(message) {
+		if (!entity.isEmpty()) {
+			boolean message = entity.stream().map(ls -> ls.getMessage()).filter(tm -> tm.equals(request.getMessage()))
+					.findFirst().isPresent();
+			if (message) {
 				response = "Duplicate Message!";
-			}else {
+			} else {
 				MessagesTable entitys = new MessagesTable();
 				entitys.setClas(request.getClas());
 				entitys.setStudent_id(request.getStudentId());
@@ -135,7 +141,7 @@ public class TeachersServiceImpl implements TeachersService {
 				messageRepo.save(entitys);
 				response = ResponseConstants.messages;
 			}
-		}else {
+		} else {
 			MessagesTable entitys = new MessagesTable();
 			entitys.setClas(request.getClas());
 			entitys.setStudent_id(request.getStudentId());
@@ -147,10 +153,10 @@ public class TeachersServiceImpl implements TeachersService {
 	}
 
 	@Override
-	public List<StudentsList> getStudentList(int studentId) {
+	public List<StudentsList> getStudentList(String studentId) {
 		List<StudentsList> response = new ArrayList<StudentsList>();
 		List<StudentsTable> studentList = studentsRepo.findByStudentsID(studentId);
-		for(StudentsTable source:studentList) {
+		for (StudentsTable source : studentList) {
 			StudentsList target = new StudentsList();
 			BeanUtils.copyProperties(source, target);
 			response.add(target);
@@ -161,15 +167,16 @@ public class TeachersServiceImpl implements TeachersService {
 	@Override
 	public String setPerformance(PerformanceRequest request) {
 		String response = null;
-		PerformanceTable table = performanceRepo.findPerformances(request.getStudent_id(), request.getYear(), request.getExam());
-		if(table == null) {
+		PerformanceTable table = performanceRepo.findPerformances(request.getStudent_id(), request.getYear(),
+				request.getExam());
+		if (table == null) {
 			PerformanceTable entity = new PerformanceTable();
 			BeanUtils.copyProperties(request, entity);
 			performanceRepo.save(entity);
 			response = ResponseConstants.saved;
-		}else {
+		} else {
 			response = ResponseConstants.alreadyExist;
-		}	
+		}
 		return response;
 	}
 
@@ -178,11 +185,11 @@ public class TeachersServiceImpl implements TeachersService {
 	public String SetHoliday(HolidayListRequest request) {
 		List<String> event = request.getEvent();
 		List<Date> date = request.getHoliday();
-		for(int i=0;i<event.size();i++) {
+		for (int i = 0; i < event.size(); i++) {
 			HolidayTable table = holidayRepo.findDate(date.get(i));
-			if(table != null) {
-				holidayRepo.updateEvent(event.get(i),date.get(i));
-			}else {
+			if (table != null) {
+				holidayRepo.updateEvent(event.get(i), date.get(i));
+			} else {
 				HolidayTable entity = new HolidayTable();
 				entity.setHoliday(date.get(i));
 				entity.setEvent(event.get(i));
@@ -191,7 +198,7 @@ public class TeachersServiceImpl implements TeachersService {
 		}
 		return ResponseConstants.saved;
 	}
-	
+
 	@Transactional
 	@Override
 	public String saveUser(UserRequest user) {
@@ -200,12 +207,30 @@ public class TeachersServiceImpl implements TeachersService {
 		java.lang.reflect.Type source = new TypeToken<UsersTable>() {
 		}.getType();
 		UsersTable userEntity = mapper.map(user, source);
-		if(usersRepo.findusername(user.getUsername()) != null) {
+		if (usersRepo.findusername(user.getUsername()) != null) {
 			response = "Username already exist try different name!";
-		}else {
+		} else {
 			usersRepo.save(userEntity);
 			response = ResponseConstants.saved;
 		}
 		return response;
 	}
+
+	@Override
+	public String getRole(String username) {
+		String role = null;
+		UsersTable entity = usersRepo.findusername(username);
+		Iterator<RolesTable> set = entity.getRoles().iterator();
+		while(set.hasNext()) {
+			role = set.next().getRole();
+		}
+		return role;
+	}
+
+	@Override
+	public String getfistName(String id) {
+		StudentsTable entity = studentsRepo.findFirstname(id);
+		return entity.getFirst_name()+ " "+entity.getLast_name();
+	}
+
 }

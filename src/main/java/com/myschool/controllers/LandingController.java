@@ -70,7 +70,7 @@ public class LandingController {
 	}
 
 	@GetMapping("/getStudents/{studentID}")
-	public ResponseEntity<List<StudentsList>> getStudents(@PathVariable int studentID) {
+	public ResponseEntity<List<StudentsList>> getStudents(@PathVariable String studentID) {
 		List<StudentsList> list = componentService.getStudentList(studentID);
 		return ResponseEntity.ok(list);
 	}

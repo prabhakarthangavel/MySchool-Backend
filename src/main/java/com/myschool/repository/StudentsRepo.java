@@ -12,6 +12,9 @@ import com.myschool.entity.StudentsTable;
 public interface StudentsRepo extends CrudRepository<StudentsTable, Integer> {
 	
 	@Query(value = "select * from students where student_id like ?1%", nativeQuery = true)
-	List<StudentsTable> findByStudentsID(int studentId);
+	List<StudentsTable> findByStudentsID(String studentId);
+
+	@Query(value = "select * from students where student_id = ?1", nativeQuery = true)
+	StudentsTable findFirstname(String id);
 
 }
