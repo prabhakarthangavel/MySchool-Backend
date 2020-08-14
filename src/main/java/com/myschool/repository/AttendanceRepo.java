@@ -12,6 +12,6 @@ import com.myschool.entity.AttendanceList;
 public interface AttendanceRepo extends CrudRepository<AttendanceList, Integer> {
 
 	@Query(value = "select * from attendance where student_id = ?1", nativeQuery = true)
-	List<AttendanceList> findStudentId(long student_id);
+	List<AttendanceList> findStudentId(String student_id);
 
 }

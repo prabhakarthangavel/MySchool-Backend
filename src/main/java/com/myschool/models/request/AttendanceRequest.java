@@ -2,7 +2,7 @@ package com.myschool.models.request;
 
 public class AttendanceRequest {
 	private int year;
-	private long student_id;
+	private String student_id;
 	private String month;
 	private int working_days;
 	private int present;
@@ -12,10 +12,10 @@ public class AttendanceRequest {
 	public void setYear(int year) {
 		this.year = year;
 	}
-	public long getStudent_id() {
+	public String getStudent_id() {
 		return student_id;
 	}
-	public void setStudent_id(long student_id) {
+	public void setStudent_id(String student_id) {
 		this.student_id = student_id;
 	}
 	public String getMonth() {

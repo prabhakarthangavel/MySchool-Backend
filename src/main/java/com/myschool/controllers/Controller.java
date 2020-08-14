@@ -44,14 +44,17 @@ public class Controller {
 
 	@PostMapping("/authenticate")
 	public ResponseEntity<AuthenticateResponse> auth(@RequestBody AuthenticationRequest request) throws Exception {
+		String jwt = null;
 		try {
+			System.out.println("try");
 			authManager.authenticate(
 					new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+			jwt = jwtUtil.generateToken(userDetails);
+
 		} catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password!", e);
-		}
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-		final String jwt = jwtUtil.generateToken(userDetails);
+			return ResponseEntity.ok(new AuthenticateResponse(jwt));
+		} 
 		return ResponseEntity.ok(new AuthenticateResponse(jwt));
 	}
 

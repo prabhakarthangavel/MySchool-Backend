@@ -33,7 +33,7 @@ import com.myschool.serviceImpl.TeachersServiceImpl;
 
 @RestController
 @RequestMapping("/teacher")
-public class LandingController {
+public class TeachersController {
 
 	@Autowired
 	private TeachersServiceImpl componentService;

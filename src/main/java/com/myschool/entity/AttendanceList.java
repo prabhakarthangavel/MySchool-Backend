@@ -31,7 +31,7 @@ public class AttendanceList implements Serializable {
 	@Column
 	private int year;
 	@Column
-	private long student_id;
+	private String student_id;
 
 	public int getYear() {
 		return year;
@@ -41,11 +41,11 @@ public class AttendanceList implements Serializable {
 		this.year = year;
 	}
 
-	public long getStudent_id() {
+	public String getStudent_id() {
 		return student_id;
 	}
 
-	public void setStudent_id(long student_id) {
+	public void setStudent_id(String student_id) {
 		this.student_id = student_id;
 	}
 

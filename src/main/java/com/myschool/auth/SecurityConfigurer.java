@@ -21,10 +21,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-	}
+//	@Autowired
+//	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//	}
 	
 	@Autowired
 	private JwtRequestFilter requestFilter;
@@ -45,7 +45,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().cors().and()
 
 				.authorizeRequests()
-				.antMatchers("/teacher/**").hasRole("TEACHER").antMatchers("/student/**").hasRole("STUDENT")
+				.antMatchers("/teacher/**").hasAnyRole("ADMIN","TEACHER")
+				.antMatchers("/student/**").hasRole("STUDENT")
 				.antMatchers("/authenticate").permitAll()
 				.anyRequest().authenticated().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -5,7 +5,8 @@ public class StudentsList {
 	private String first_name;
 	private String last_name;
 	private String section;
-	private int student_id;
+	private String student_id;
+	
 	public int getClas() {
 		return clas;
 	}
@@ -30,10 +31,10 @@ public class StudentsList {
 	public void setSection(String section) {
 		this.section = section;
 	}
-	public int getStudent_id() {
+	public String getStudent_id() {
 		return student_id;
 	}
-	public void setStudent_id(int student_id) {
+	public void setStudent_id(String student_id) {
 		this.student_id = student_id;
 	}
 }
