@@ -3,7 +3,7 @@ package com.myschool.models.response;
 public class AttendanceResponse {
 	private int absent;
 	private String month;
-	private int percentage;
+	private float percentage;
 	private int present;
 	private String student_id;
 	private int working_days;
@@ -21,10 +21,10 @@ public class AttendanceResponse {
 	public void setMonth(String month) {
 		this.month = month;
 	}
-	public int getPercentage() {
+	public float getPercentage() {
 		return percentage;
 	}
-	public void setPercentage(int percentage) {
+	public void setPercentage(float percentage) {
 		this.percentage = percentage;
 	}
 	public int getPresent() {

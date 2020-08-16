@@ -3,11 +3,11 @@ package com.myschool.models.request;
 import java.util.Date;
 
 public class AssignmentRequest {
-	private String clas;
+	private int clas;
 	private String section;
 	private String subject;
 	private String description;
-	private String dueDate;
+	private Date dueDate;
 	
 	public String getSubject() {
 		return subject;
@@ -15,10 +15,10 @@ public class AssignmentRequest {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public String getClas() {
+	public int getClas() {
 		return clas;
 	}
-	public void setClas(String clas) {
+	public void setClas(int clas) {
 		this.clas = clas;
 	}
 	public String getSection() {
@@ -33,10 +33,10 @@ public class AssignmentRequest {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getDueDate() {
+	public Date getDueDate() {
 		return dueDate;
 	}
-	public void setDueDate(String dueDate) {
+	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
 }

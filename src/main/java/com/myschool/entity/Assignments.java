@@ -20,7 +20,7 @@ public class Assignments implements Serializable {
 	@Column
 	private int id;
 	@Column(name = "class")
-	private String clas;
+	private int clas;
 	@Column
 	private String section;
 	@Column
@@ -28,7 +28,7 @@ public class Assignments implements Serializable {
 	@Column(length = 3510)
 	private String description;
 	@Column(name="due_date")
-	private String dueDate;
+	private Date dueDate;
 
 	public String getSubject() {
 		return subject;
@@ -46,11 +46,11 @@ public class Assignments implements Serializable {
 		this.id = id;
 	}
 
-	public String getClas() {
+	public int getClas() {
 		return clas;
 	}
 
-	public void setClas(String clas) {
+	public void setClas(int clas) {
 		this.clas = clas;
 	}
 
@@ -70,11 +70,11 @@ public class Assignments implements Serializable {
 		this.description = description;
 	}
 
-	public String getDueDate() {
+	public Date getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(String dueDate) {
+	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
 }

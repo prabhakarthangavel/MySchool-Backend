@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.response.AttendanceResponse;
 import com.myschool.serviceImpl.StudentsServiceImpl;
 
@@ -22,6 +23,12 @@ public class StudentsController {
 	@GetMapping("/getAttendance/{student_id}")
 	public ResponseEntity<List<AttendanceResponse>> getAttandance(@PathVariable String student_id){
 		List<AttendanceResponse> response = studentsService.getAttendance(student_id);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/getAssignments/{student_id}")
+	public ResponseEntity<List<AssignmentRequest>> getAssignments(@PathVariable String student_id){
+		List<AssignmentRequest> response = studentsService.getAssignments(student_id);
 		return ResponseEntity.ok(response);
 	}
 }
