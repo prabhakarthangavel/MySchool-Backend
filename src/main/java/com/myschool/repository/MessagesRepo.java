@@ -15,6 +15,6 @@ public interface MessagesRepo extends CrudRepository<MessagesTable, Integer> {
 	List<MessagesTable> findByClass(int clas);
 
 	@Query(value = "select * from messages where student_id = ?1", nativeQuery = true)
-	List<MessagesTable> findByStudent(int studentId);
+	List<MessagesTable> findByStudent(String studentId);
 
 }

@@ -32,6 +32,16 @@ public class AttendanceList implements Serializable {
 	private int year;
 	@Column
 	private String student_id;
+	@Column
+	private String created_by;
+
+	public String getCreated_by() {
+		return created_by;
+	}
+
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
+	}
 
 	public int getYear() {
 		return year;

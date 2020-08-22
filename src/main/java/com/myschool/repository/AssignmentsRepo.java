@@ -15,6 +15,6 @@ public interface AssignmentsRepo extends CrudRepository<Assignments, Integer> {
 	@Query(value = "select * from assignments where class = ?1 and description = ?2 and due_date = ?3 and section = ?4 and subject =?5", nativeQuery = true)
 	Assignments findItem(int clas, String description, Date due_date, String section, String subject);
 
-	@Query(value = "select * from assignments where class = ?1 and section = ?2", nativeQuery = true)
+	@Query(value = "select * from assignments where class = ?1 and section = ?2 order by due_date desc", nativeQuery = true)
 	List<Assignments> getItems(int clas, String section);
 }

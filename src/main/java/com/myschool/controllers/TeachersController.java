@@ -1,14 +1,7 @@
 package com.myschool.controllers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +40,7 @@ public class TeachersController {
 	}
 
 	@PostMapping("/setAssignments")
-	public ResponseEntity<Response> setTimetable(@RequestBody AssignmentRequest request) throws ParseException {
+	public ResponseEntity<Response> setAssignments(@RequestBody AssignmentRequest request) {
 		return ResponseEntity.ok(new Response(componentService.saveAssginments(request)));
 	}
 

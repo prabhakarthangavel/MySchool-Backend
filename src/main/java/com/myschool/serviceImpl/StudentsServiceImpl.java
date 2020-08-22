@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.myschool.entity.Assignments;
 import com.myschool.entity.AttendanceList;
+import com.myschool.entity.MessagesTable;
 import com.myschool.entity.StudentsTable;
 import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.response.AttendanceResponse;
+import com.myschool.models.response.MessagesResponse;
 import com.myschool.repository.AssignmentsRepo;
 import com.myschool.repository.AttendanceRepo;
+import com.myschool.repository.MessagesRepo;
 import com.myschool.repository.StudentsRepo;
 import com.myschool.service.StudentsService;
 
@@ -28,6 +31,9 @@ public class StudentsServiceImpl implements StudentsService {
 
 	@Autowired
 	private StudentsRepo studentsRepo;
+	
+	@Autowired
+	private MessagesRepo messageRepo;
 
 	@Override
 	public List<AttendanceResponse> getAttendance(String student_id) {
@@ -56,5 +62,36 @@ public class StudentsServiceImpl implements StudentsService {
 
 	private StudentsTable getClass(String student_id) {
 		return studentsRepo.findFirstname(student_id);
+	}
+
+	@Override
+	public List<MessagesResponse> getMessagesClass(int clas) {
+		List<MessagesResponse> list = new ArrayList<MessagesResponse>();
+		List<MessagesTable> entity = messageRepo.findByClass(clas);
+		for(MessagesTable source:entity) {
+			MessagesResponse target = new MessagesResponse();
+			target.setMessage(source.getMessage());
+			target.setCreated_on(source.getCreated_on());
+			list.add(target);
+		}
+		return list;
+	}
+
+	@Override
+	public int getClas(String student_id) {
+		return studentsRepo.findclas(student_id);
+	}
+
+	@Override
+	public List<MessagesResponse> getMessagesById(String student_id) {
+		List<MessagesResponse> list = new ArrayList<MessagesResponse>();
+		List<MessagesTable> entity = messageRepo.findByStudent(student_id);
+		for(MessagesTable source:entity) {
+			MessagesResponse target = new MessagesResponse();
+			target.setMessage(source.getMessage());
+			target.setCreated_on(source.getCreated_on());
+			list.add(target);
+		}
+		return list;
 	}
 }

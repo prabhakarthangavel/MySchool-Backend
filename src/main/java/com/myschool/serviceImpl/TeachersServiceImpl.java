@@ -72,7 +72,7 @@ public class TeachersServiceImpl implements TeachersService {
 			boolean year = entity.stream().map(ls -> ls.getYear()).filter(tm -> tm == request.getYear()).findFirst()
 					.isPresent();
 			if (month && year) {
-				response = "Student ID and Year already exist";
+				response = "Data already exist for student for this year and month";
 			} else if ((month && !year) || (!month && year)) {
 				response = save(request);
 			}
@@ -91,6 +91,7 @@ public class TeachersServiceImpl implements TeachersService {
 		attend.setStudent_id(request.getStudent_id());
 		attend.setYear(request.getYear());
 		attend.setPercentage(request.getPresent() * 100 / request.getWorking_days());
+		attend.setCreated_by(request.getCreated_by());
 		attenListRepo.save(attend);
 		return ResponseConstants.saved;
 	}
@@ -118,8 +119,8 @@ public class TeachersServiceImpl implements TeachersService {
 		if (request.getClas() != 0) {
 			entity = messageRepo.findByClass(request.getClas());
 			response = message(entity, request);
-		} else if (request.getStudentId() != 0) {
-			entity = messageRepo.findByStudent(request.getStudentId());
+		} else if (request.getStudent_id() != null) {
+			entity = messageRepo.findByStudent(request.getStudent_id());
 			response = message(entity, request);
 		}
 		return response;
@@ -134,17 +135,13 @@ public class TeachersServiceImpl implements TeachersService {
 				response = "Duplicate Message!";
 			} else {
 				MessagesTable entitys = new MessagesTable();
-				entitys.setClas(request.getClas());
-				entitys.setStudent_id(request.getStudentId());
-				entitys.setMessage(request.getMessage());
+				BeanUtils.copyProperties(request, entitys);
 				messageRepo.save(entitys);
 				response = ResponseConstants.messages;
 			}
 		} else {
 			MessagesTable entitys = new MessagesTable();
-			entitys.setClas(request.getClas());
-			entitys.setStudent_id(request.getStudentId());
-			entitys.setMessage(request.getMessage());
+			BeanUtils.copyProperties(request, entitys);
 			messageRepo.save(entitys);
 			response = ResponseConstants.messages;
 		}

@@ -1,6 +1,7 @@
 package com.myschool.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,21 +20,38 @@ public class MessagesTable implements Serializable {
 	@Column
 	private int id;
 	@Column
-	private int student_id;
+	private String student_id;
 	@Column(name="class")
 	private int clas;
 	@Column(length=1001)
 	private String message;
+	@Column
+	private Date created_on;
+	@Column
+	private String created_by;
+	
+	public Date getCreated_on() {
+		return created_on;
+	}
+	public void setCreated_on(Date created_on) {
+		this.created_on = created_on;
+	}
+	public String getCreated_by() {
+		return created_by;
+	}
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getStudent_id() {
+	public String getStudent_id() {
 		return student_id;
 	}
-	public void setStudent_id(int student_id) {
+	public void setStudent_id(String student_id) {
 		this.student_id = student_id;
 	}
 	public int getClas() {

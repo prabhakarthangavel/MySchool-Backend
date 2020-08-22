@@ -29,6 +29,16 @@ public class Assignments implements Serializable {
 	private String description;
 	@Column(name="due_date")
 	private Date dueDate;
+	@Column
+	private String created_by;
+
+	public String getCreated_by() {
+		return created_by;
+	}
+
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
+	}
 
 	public String getSubject() {
 		return subject;

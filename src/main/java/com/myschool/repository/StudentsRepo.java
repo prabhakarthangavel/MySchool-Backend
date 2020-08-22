@@ -16,5 +16,7 @@ public interface StudentsRepo extends CrudRepository<StudentsTable, Integer> {
 
 	@Query(value = "select * from students where student_id = ?1", nativeQuery = true)
 	StudentsTable findFirstname(String id);
-
+	
+	@Query(value = "select class from students where student_id = ?1", nativeQuery = true)
+	int findclas(String id);
 }

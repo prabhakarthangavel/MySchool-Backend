@@ -6,6 +6,14 @@ public class AttendanceRequest {
 	private String month;
 	private int working_days;
 	private int present;
+	private String created_by;
+
+	public String getCreated_by() {
+		return created_by;
+	}
+	public void setCreated_by(String created_by) {
+		this.created_by = created_by;
+	}
 	public int getYear() {
 		return year;
 	}
