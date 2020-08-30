@@ -1,7 +1,7 @@
 package com.myschool.models.request;
 
 public class PerformanceRequest {
-	private int student_id;
+	private String student_id;
 	private String exam;
 	private int year;
 	private int tamil;
@@ -19,10 +19,10 @@ public class PerformanceRequest {
 	public void setYear(int year) {
 		this.year = year;
 	}
-	public int getStudent_id() {
+	public String getStudent_id() {
 		return student_id;
 	}
-	public void setStudent_id(int student_id) {
+	public void setStudent_id(String student_id) {
 		this.student_id = student_id;
 	}
 	public String getExam() {

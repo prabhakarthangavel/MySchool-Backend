@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.response.AttendanceResponse;
+import com.myschool.models.response.HolidayResponse;
 import com.myschool.models.response.MessagesResponse;
+import com.myschool.models.response.PrimaryPerformance;
 import com.myschool.serviceImpl.StudentsServiceImpl;
 
 @RestController
@@ -38,15 +40,27 @@ public class StudentsController {
 		List<MessagesResponse> response = studentsService.getMessagesClass(clas);
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@GetMapping("/getClass/{student_id}")
-	public ResponseEntity<Integer> getStudentByClass(@PathVariable String student_id){
+	public ResponseEntity<Integer> getStudentByClass(@PathVariable String student_id) {
 		return ResponseEntity.ok(studentsService.getClas(student_id));
 	}
-	
-	@GetMapping("/getMessageById/{clas}")
-	public ResponseEntity<List<MessagesResponse>> getMessageById(@PathVariable int clas) {
-		List<MessagesResponse> response = studentsService.getMessagesClass(clas);
+
+	@GetMapping("/getMessageById/{student_id}")
+	public ResponseEntity<List<MessagesResponse>> getMessageById(@PathVariable String student_id) {
+		List<MessagesResponse> response = studentsService.getMessagesById(student_id);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/getHolidays")
+	public ResponseEntity<List<HolidayResponse>> getHoliday() {
+		List<HolidayResponse> response = studentsService.getHolidayList();
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/getPerfomances/{student_id}")
+	public ResponseEntity<List<PrimaryPerformance>> getPeformance(@PathVariable String student_id){
+		List<PrimaryPerformance> response = studentsService.getPerformances(student_id);
 		return ResponseEntity.ok(response);
 	}
 }

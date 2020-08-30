@@ -19,7 +19,7 @@ public class PerformanceTable implements Serializable {
 	@Column
 	private int id;
 	@Column
-	private int student_id;
+	private String student_id;
 	@Column
 	private String exam;
 	@Column
@@ -48,10 +48,10 @@ public class PerformanceTable implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getStudent_id() {
+	public String getStudent_id() {
 		return student_id;
 	}
-	public void setStudent_id(int student_id) {
+	public void setStudent_id(String student_id) {
 		this.student_id = student_id;
 	}
 	public String getExam() {

@@ -2,6 +2,8 @@ package com.myschool.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +11,21 @@ import org.springframework.stereotype.Service;
 
 import com.myschool.entity.Assignments;
 import com.myschool.entity.AttendanceList;
+import com.myschool.entity.HolidayTable;
 import com.myschool.entity.MessagesTable;
+import com.myschool.entity.PerformanceTable;
 import com.myschool.entity.StudentsTable;
 import com.myschool.models.request.AssignmentRequest;
 import com.myschool.models.response.AttendanceResponse;
+import com.myschool.models.response.HolidayResponse;
 import com.myschool.models.response.MessagesResponse;
+import com.myschool.models.response.PrimaryPerformance;
 import com.myschool.repository.AssignmentsRepo;
 import com.myschool.repository.AttendanceRepo;
+import com.myschool.repository.ClassesRepo;
+import com.myschool.repository.HolidayRepo;
 import com.myschool.repository.MessagesRepo;
+import com.myschool.repository.PerformanceRepo;
 import com.myschool.repository.StudentsRepo;
 import com.myschool.service.StudentsService;
 
@@ -34,7 +43,16 @@ public class StudentsServiceImpl implements StudentsService {
 	
 	@Autowired
 	private MessagesRepo messageRepo;
+	
+	@Autowired
+	private HolidayRepo holidayRepo;
 
+	@Autowired
+	private PerformanceRepo performanceRepo;
+	
+	@Autowired
+	private ClassesRepo classRepo;
+	
 	@Override
 	public List<AttendanceResponse> getAttendance(String student_id) {
 		List<AttendanceResponse> response = new ArrayList<AttendanceResponse>();
@@ -93,5 +111,29 @@ public class StudentsServiceImpl implements StudentsService {
 			list.add(target);
 		}
 		return list;
+	}
+
+	@Override
+	public List<HolidayResponse> getHolidayList() {
+		List<HolidayResponse> list = new ArrayList<HolidayResponse>();
+		List<HolidayTable> entity = StreamSupport.stream(holidayRepo.findAll().spliterator(),false).collect(Collectors.toList());
+		for(HolidayTable source:entity) {
+			HolidayResponse target = new HolidayResponse();
+			BeanUtils.copyProperties(source, target);
+			list.add(target);
+		}
+		return list;
+	}
+
+	@Override
+	public List<PrimaryPerformance> getPerformances(String student_id) {
+		List<PrimaryPerformance> response = new ArrayList<PrimaryPerformance>();
+		List<PerformanceTable> entity = performanceRepo.findByStudent(student_id);
+		for(PerformanceTable source:entity) {
+			PrimaryPerformance target = new PrimaryPerformance();
+			BeanUtils.copyProperties(source, target);
+			response.add(target);
+		}
+		return response;
 	}
 }
