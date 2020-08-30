@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myschool.auth.JwtUtil;
@@ -21,6 +22,7 @@ import com.myschool.models.response.Response;
 import com.myschool.serviceImpl.TeachersServiceImpl;
 
 @RestController
+@RequestMapping("/public")
 public class Controller {
 	@Autowired
 	private AuthenticationManager authManager;

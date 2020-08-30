@@ -47,7 +47,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/teacher/**").hasAnyRole("ADMIN","TEACHER")
 				.antMatchers("/student/**").hasRole("STUDENT")
-				.antMatchers("/authenticate").permitAll()
+				.antMatchers("/public/**").permitAll()
 				.anyRequest().authenticated().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
